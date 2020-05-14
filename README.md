@@ -6,6 +6,7 @@
 
 ```
 root@ubuntu:~# mkdir -p /var/docker/frpc/conf/ && vi /var/docker/frpc/conf/frpc.ini
+
 [common]
 server_addr = xxx.xxx.xxx.xxx
 server_port = 7000
