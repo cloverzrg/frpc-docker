@@ -3,7 +3,7 @@
 ### EXAMPLE
 `docker run -d --net=host --restart=always -v /var/docker/frpc/conf:/conf cloverzrg/frpc-docker`
 
-`vi /var/docker/frpc/conf/frpc.ini`
+mkdir -p /var/docker/frpc/conf/ && vi /var/docker/frpc/conf/frpc.ini:
 ```
 [common]
 server_addr = xxx.xxx.xxx.xxx
