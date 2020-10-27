@@ -1,19 +1,15 @@
-FROM alpine
+FROM golang:alpine as builder
+RUN apk update && apk add --no-cache git build-base make tzdata
+ENV FRP_VERSION 0.34.1
+RUN git clone --branch v${FRP_VERSION} https://github.com/fatedier/frp.git
+WORKDIR /go/frp
+RUN make frpc
 
-RUN apk add --update tzdata
+FROM alpine:latest
+RUN apk update && apk add --no-cache ca-certificates tzdata
+COPY --from=builder /go/frp/bin/frpc /frpc/
 ENV TZ=Asia/Shanghai
-
-ENV FRP_VERSION 0.34.0
-RUN wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && tar -xf frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && mkdir /frpc \
-    && cp frp_${FRP_VERSION}_linux_amd64/frpc* /frpc/ \
-    && rm -rf frp_${FRP_VERSION}_linux_amd64*
-    
-RUN rm -rf /var/cache/apk/*
-
 RUN mkdir /conf
 VOLUME /conf
-
 WORKDIR /frpc
 ENTRYPOINT ["./frpc","-c","/conf/frpc.ini"]
